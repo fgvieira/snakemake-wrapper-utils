@@ -31,7 +31,7 @@ def get_mem(snakemake, out_unit="MiB", mem_overhead_factor=0):
 
 def list_arg(cmd):
     """Turn command into list."""
-    return cmd.replace("=", " ").split(" ")
+    return list(filter(None, cmd.replace("=", " ").split(" ")))
 
 
 def get_arg(arg, cmd):
