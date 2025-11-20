@@ -29,9 +29,22 @@ def get_mem(snakemake, out_unit="MiB", mem_overhead_factor=0):
         raise ValueError("invalid output unit. Only B, KiB, MiB and GiB supported.")
 
 
+def list_arg(cmd):
+    """Turn command into list."""
+    return cmd.replace("=", " ").split(" ")
+
+
+def get_arg(arg, cmd):
+    """Return position of argument on command."""
+    try:
+        return list_arg(cmd).index(arg)
+    except ValueError:
+        return None
+
+
 def is_arg(arg, cmd):
-    """Check command for the presence of argument."""
-    return arg in cmd.replace("=", " ").split(" ")
+    """Check presence of argument on command."""
+    return bool(get_arg(arg, cmd))
 
 
 def get_format(path):
