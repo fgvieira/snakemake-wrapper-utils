@@ -44,7 +44,7 @@ def get_arg(arg, cmd):
 
 def is_arg(arg, cmd):
     """Check presence of argument on command."""
-    return bool(get_arg(arg, cmd))
+    return bool(get_arg(arg, cmd) is not None)
 
 
 def get_format(path):
