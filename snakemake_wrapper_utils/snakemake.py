@@ -110,12 +110,12 @@ def get_format(path, ignore_compression=True):
     return ext.lstrip(".")
 
 
-def move_files(snakemake, mapping, cmd="mv -v"):
+def move_files(snakemake, mapping, cmd="mv -v", required=True):
     """
     Build shell move commands for relocating tool-produced files to named outputs.
 
     mapping must be a dict of {out_tag: source_path}. The out_tag must resolve
-    to a single file path in snakemake.output.
+    to a single file path in `snakemake.output` (unless `required=False`).
 
     Example:
         mapping = {"tsv": "/tmp/tmp98723489/results/out.tsv"}
@@ -132,10 +132,11 @@ def move_files(snakemake, mapping, cmd="mv -v"):
     cmds = []
     for out_tag, tool_out_name in mapping.items():
         out_name = snakemake.output.get(out_tag, "")
-        if not out_name:
+        if out_name:
+            cmds.append(f"{cmd} '{tool_out_name}' '{out_name}'")
+        elif required:
             raise KeyError(
                 f"The wrapper requires the named output: {out_tag}. Please provide this named output."
             )
-        cmds.append(f"{cmd} '{tool_out_name}' '{out_name}'")
 
     return cmds
